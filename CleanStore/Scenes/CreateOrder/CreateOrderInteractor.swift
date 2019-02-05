@@ -25,7 +25,6 @@ protocol CreateOrderDataStore
 class CreateOrderInteractor: CreateOrderBusinessLogic, CreateOrderDataStore
 {
   var presenter: CreateOrderPresentationLogic?
-  var worker: CreateOrderWorker?
   var shipmentMethods: [String] = [
     "Standard Shipping",
     "Two-Day Shipping",

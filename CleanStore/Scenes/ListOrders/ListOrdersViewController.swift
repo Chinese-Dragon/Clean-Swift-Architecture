@@ -14,14 +14,14 @@ import UIKit
 
 protocol ListOrdersDisplayLogic: class
 {
-  func displaySomething(viewModel: ListOrders.FetchOrders.ViewModel)
+  func displayFetchedOrders(viewModel: ListOrders.FetchOrders.ViewModel)
 }
 
-class ListOrdersViewController: UIViewController, ListOrdersDisplayLogic
+class ListOrdersViewController: UITableViewController, ListOrdersDisplayLogic
 {
   var interactor: ListOrdersBusinessLogic?
   var router: (NSObjectProtocol & ListOrdersRoutingLogic & ListOrdersDataPassing)?
-
+  var displayedOrders: [ListOrders.FetchOrders.ViewModel.DisplayedOrder] = []
   // MARK: Object lifecycle
   
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
@@ -82,8 +82,29 @@ class ListOrdersViewController: UIViewController, ListOrdersDisplayLogic
   
   // MARK: Display Something
   
-  func displaySomething(viewModel: ListOrders.FetchOrders.ViewModel)
+  func displayFetchedOrders(viewModel: ListOrders.FetchOrders.ViewModel)
   {
-    //nameTextField.text = viewModel.name
+    self.displayedOrders = viewModel.displayedOrders
+    tableView.reloadData()
+  }
+}
+
+extension ListOrdersViewController {
+  override func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
+  }
+  
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return displayedOrders.count
+  }
+  
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "OrderTableViewCell", for: indexPath)
+    
+    let displayedOrder = displayedOrders[indexPath.row]
+    cell.textLabel?.text = displayedOrder.date
+    cell.detailTextLabel?.text = displayedOrder.total
+    
+    return cell
   }
 }
