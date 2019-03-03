@@ -22,14 +22,17 @@ class ListOrdersViewController: UITableViewController, ListOrdersDisplayLogic
   var interactor: ListOrdersBusinessLogic?
   var router: (NSObjectProtocol & ListOrdersRoutingLogic & ListOrdersDataPassing)?
   var displayedOrders: [ListOrders.FetchOrders.ViewModel.DisplayedOrder] = []
+  
   // MARK: Object lifecycle
   
+  // init from nib
   override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
   {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     setup()
   }
   
+  // init from storyboad
   required init?(coder aDecoder: NSCoder)
   {
     super.init(coder: aDecoder)

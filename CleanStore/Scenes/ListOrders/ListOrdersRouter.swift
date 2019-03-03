@@ -14,7 +14,8 @@ import UIKit
 
 @objc protocol ListOrdersRoutingLogic
 {
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
+  func routeToShowOrder(segue: UIStoryboardSegue?)
+  func routeToCreateOrder(segue: UIStoryboardSegue?)
 }
 
 protocol ListOrdersDataPassing
@@ -29,32 +30,55 @@ class ListOrdersRouter: NSObject, ListOrdersRoutingLogic, ListOrdersDataPassing
   
   // MARK: Routing
   
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
-  //{
-  //  if let segue = segue {
-  //    let destinationVC = segue.destination as! SomewhereViewController
-  //    var destinationDS = destinationVC.router!.dataStore!
-  //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-  //  } else {
-  //    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-  //    let destinationVC = storyboard.instantiateViewController(withIdentifier: "SomewhereViewController") as! SomewhereViewController
-  //    var destinationDS = destinationVC.router!.dataStore!
-  //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-  //    navigateToSomewhere(source: viewController!, destination: destinationVC)
-  //  }
-  //}
-
-  // MARK: Navigation
+  func routeToShowOrder(segue: UIStoryboardSegue?)
+  {
+    // navigation from storyboard
+    if let segue = segue {
+      let destinationVC = segue.destination as! ShowOrderViewController
+      var destinationDS = destinationVC.router!.dataStore!
+      passDataToShowOrder(source: dataStore!, destination: &destinationDS)
+    } else {
+      // programatic navigation
+      let destinationVC = viewController?.storyboard?.instantiateViewController(withIdentifier: "CreateOrderViewController") as! ShowOrderViewController
+      var destinationDS = destinationVC.router!.dataStore!
+      passDataToShowOrder(source: dataStore!, destination: &destinationDS)
+      navigateToShowOrder(source: viewController!, destination: destinationVC)
+    }
+  }
   
-  //func navigateToSomewhere(source: ListOrdersViewController, destination: SomewhereViewController)
-  //{
-  //  source.show(destination, sender: nil)
-  //}
+  func routeToCreateOrder(segue: UIStoryboardSegue?) {
+    if let segue = segue {
+      let destinationVC = segue.destination as! CreateOrderViewController
+      var destinationDS = destinationVC.router!.dataStore!
+      passDataToCreateOrder(source: dataStore!, destination: &destinationDS)
+    } else {
+      let destinationVC = viewController?.storyboard?.instantiateViewController(withIdentifier: "CreateOrderViewController") as! CreateOrderViewController
+      var destinationDS = destinationVC.router!.dataStore!
+      passDataToCreateOrder(source: dataStore!, destination: &destinationDS)
+      navigateToCreateOrder(source: viewController!, destination: destinationVC)
+    }
+  }
   
   // MARK: Passing data
   
-  //func passDataToSomewhere(source: ListOrdersDataStore, destination: inout SomewhereDataStore)
-  //{
-  //  destination.name = source.name
-  //}
+  func passDataToShowOrder(source: ListOrdersDataStore, destination: inout ShowOrderDataStore)
+  {
+    let selectedRow = viewController?.tableView.indexPathForSelectedRow?.row
+    destination.order = source.orders?[selectedRow!]
+  }
+  
+  func passDataToCreateOrder(source: ListOrdersDataStore, destination: inout CreateOrderDataStore) {
+    
+  }
+
+  // MARK: Navigation
+  
+  func navigateToShowOrder(source: ListOrdersViewController, destination: ShowOrderViewController)
+  {
+    source.show(destination, sender: nil)
+  }
+  
+  func navigateToCreateOrder(source: ListOrdersViewController, destination: CreateOrderViewController) {
+    source.show(destination, sender: nil)
+  }
 }

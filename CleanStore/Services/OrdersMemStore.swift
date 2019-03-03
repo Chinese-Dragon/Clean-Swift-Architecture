@@ -1,6 +1,6 @@
 import Foundation
 
-class OrdersMemStore: OrdersStoreProtocol
+class OrdersMemStore: OrdersStoreProtocol, OrdersStoreUtilityProtocol
 {
   // MARK: - Data
   static var billingAddress = Address(street1: "1 Infinite Loop", street2: "", city: "Cupertino", state: "CA", zip: "95014")
@@ -13,7 +13,39 @@ class OrdersMemStore: OrdersStoreProtocol
     Order(firstName: "Bob", lastName: "Battery", phone: "222-222-2222", email: "bob.battery@clean-swift.com", billingAddress: billingAddress, paymentMethod: paymentMethod, shipmentAddress: shipmentAddress, shipmentMethod: shipmentMethod, id: "def456", date: Date(), total: NSDecimalNumber(string: "4.56"))
   ]
   
-  func fetchOrders(completionHandler: @escaping (() throws -> [Order]) -> Void) {
-    completionHandler { return type(of: self).orders }
+  func fetchOrders(completionHandler: @escaping OrdersStoreFetchOrdersCompletionHandler) {
+    completionHandler(.Success(result: type(of: self).orders))
+  }
+  
+  func fetchOrder(id: String, completionHandler: @escaping OrdersStoreFetchOrderCompletionHandler) {
+  }
+  
+  func createOrder(orderToCreate: Order, completionHandler: @escaping OrdersStoreCreateOrderCompletionHandler) {
+    var order = orderToCreate
+    generateOrderID(order: &order)
+    calculateOrderTotal(order: &order)
+    type(of: self).orders.append(order)
+    completionHandler(.Success(result: order))
+  }
+  
+  func updateOrder(orderToUpdate: Order, completionHandler: @escaping OrdersStoreUpdateOrderCompletionHandler) {
+    if let index = indexOfOrderWithID(id: orderToUpdate.id) {
+      type(of: self).orders[index] = orderToUpdate
+      let order = type(of: self).orders[index]
+      completionHandler(.Success(result: order))
+    } else {
+      completionHandler(.Failure(error: OrdersStoreError.CannotUpdate("Cannot update order with id \(String(describing: orderToUpdate.id)) to update")))
+    }
+  }
+  
+  func deleteOrder(id: String, completionHandler: @escaping OrdersStoreDeleteOrderCompletionHandler) {
+    
+  }
+  
+  // MARK: - Convenience methods
+  
+  private func indexOfOrderWithID(id: String?) -> Int?
+  {
+    return type(of: self).orders.index { return $0.id == id }
   }
 }

@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -725,9 +726,24 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="billingAddressSwitch" destination="WoW-Fx-Khq" id="e3Q-jP-OjV"/>
+                        <outlet property="billingAddressCityTextField" destination="nbg-6w-HFY" id="aPS-HI-rPL"/>
+                        <outlet property="billingAddressStateTextField" destination="9hC-80-ZPc" id="Fhz-uy-dri"/>
+                        <outlet property="billingAddressStreet1TextField" destination="lCT-l7-Oz1" id="6eC-sI-HIg"/>
+                        <outlet property="billingAddressStreet2TextField" destination="bqr-VZ-yxI" id="TM7-rJ-z9j"/>
+                        <outlet property="billingAddressZIPTextField" destination="MnW-un-Boc" id="KLj-nx-Ref"/>
+                        <outlet property="ccvTextField" destination="ibe-gZ-CeV" id="MzT-Bq-rgP"/>
+                        <outlet property="creditCardNumberTextField" destination="MvX-cU-xfF" id="fsd-Co-87z"/>
+                        <outlet property="emailTextField" destination="A7P-uM-fET" id="Mk1-sS-oer"/>
                         <outlet property="expirationDatePicker" destination="02P-kf-MJe" id="exS-OE-2fx"/>
                         <outlet property="expirationDateTextfield" destination="6eS-F7-tWi" id="04J-hr-xcy"/>
+                        <outlet property="firstNameTextField" destination="1JX-Ss-Zes" id="F3a-yp-ggQ"/>
+                        <outlet property="lastNameTextField" destination="uXX-Vw-9zB" id="HSn-Oa-eAF"/>
+                        <outlet property="phoneTextField" destination="B0a-NL-2Hx" id="iga-5A-GgJ"/>
+                        <outlet property="shipmentAddressCityTextField" destination="eDc-S5-yj9" id="XCK-VK-9O7"/>
+                        <outlet property="shipmentAddressStateTextField" destination="h3C-Eq-lZB" id="ENS-3r-M07"/>
+                        <outlet property="shipmentAddressStreet1TextField" destination="tgp-Zf-Vlt" id="44X-Io-klC"/>
+                        <outlet property="shipmentAddressStreet2TextField" destination="HAO-Fl-sRu" id="MSp-B7-RGN"/>
+                        <outlet property="shipmentAddressZIPTextField" destination="UbS-nn-0zm" id="yDe-05-9Xi"/>
                         <outlet property="shippingMethodPicker" destination="48x-7u-a2c" id="WSk-Pp-Qvh"/>
                         <outlet property="shippingMethodTextfield" destination="3fw-Cn-ZXe" id="02z-ru-VIY"/>
                         <outletCollection property="textFields" destination="1JX-Ss-Zes" collectionClass="NSMutableArray" id="1si-Ck-iu1"/>
@@ -770,7 +786,7 @@
                     </connections>
                 </datePicker>
             </objects>
-            <point key="canvasLocation" x="478" y="1376"/>
+            <point key="canvasLocation" x="495" y="1414"/>
         </scene>
         <!--List Orders View Controller-->
         <scene sceneID="zIl-VN-5Dn">
@@ -804,6 +820,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="KVI-SK-AEM" kind="show" identifier="ShowOrder" id="SK5-fx-U7B"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -814,7 +833,7 @@
                     <navigationItem key="navigationItem" id="Pfz-MK-NXY">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="cSg-88-n2V">
                             <connections>
-                                <segue destination="vZt-Aa-LA0" kind="show" id="0JL-1j-sYu"/>
+                                <segue destination="vZt-Aa-LA0" kind="show" identifier="CreateOrder" id="0JL-1j-sYu"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -839,7 +858,135 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wvn-P1-w0T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-428" y="602"/>
+            <point key="canvasLocation" x="-308" y="589"/>
+        </scene>
+        <!--Show Order-->
+        <scene sceneID="8YE-Wn-U8K">
+            <objects>
+                <viewController id="KVI-SK-AEM" customClass="ShowOrderViewController" customModule="CleanStore" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZeX-xM-tI5">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="x1O-wN-TJB">
+                                <rect key="frame" x="102.5" y="212.5" width="170.5" height="242.5"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="CKD-Gr-Qyo">
+                                        <rect key="frame" x="0.0" y="0.0" width="170.5" height="20.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Order ID: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sec-04-Fxm">
+                                                <rect key="frame" x="0.0" y="0.0" width="139.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="id" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OBO-Ly-Lo6">
+                                                <rect key="frame" x="156.5" y="0.0" width="14" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="nRd-KD-tJu">
+                                        <rect key="frame" x="0.0" y="55.5" width="170.5" height="20.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Order Date: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TYG-Hi-QhJ">
+                                                <rect key="frame" x="0.0" y="0.0" width="93.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R7V-pL-ZMg">
+                                                <rect key="frame" x="110.5" y="0.0" width="60" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="So4-Y9-nKa">
+                                        <rect key="frame" x="0.0" y="111" width="170.5" height="20.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email Address:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="48m-O3-eSc">
+                                                <rect key="frame" x="0.0" y="0.0" width="113" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iFD-J9-MhE">
+                                                <rect key="frame" x="130" y="0.0" width="40.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="cjL-Ub-hgZ">
+                                        <rect key="frame" x="0.0" y="166.5" width="170.5" height="20.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Your Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pj9-GL-dtQ">
+                                                <rect key="frame" x="0.0" y="0.0" width="111" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vP9-ZA-Ny6">
+                                                <rect key="frame" x="128" y="0.0" width="42.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="mLH-2g-YRm">
+                                        <rect key="frame" x="0.0" y="222" width="170.5" height="20.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Order Total:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MbK-Kg-gVq">
+                                                <rect key="frame" x="0.0" y="0.0" width="119.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="total" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jXy-kJ-qRh">
+                                                <rect key="frame" x="136.5" y="0.0" width="34" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="x1O-wN-TJB" firstAttribute="centerX" secondItem="ZeX-xM-tI5" secondAttribute="centerX" id="YPa-lF-nG9"/>
+                            <constraint firstItem="x1O-wN-TJB" firstAttribute="centerY" secondItem="ZeX-xM-tI5" secondAttribute="centerY" id="n40-FR-ZTm"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="cgQ-ZH-Tt7"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Show Order" id="ZBT-8z-O2i">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="9b9-NH-Wms">
+                            <connections>
+                                <segue destination="vZt-Aa-LA0" kind="show" identifier="EditOrder" id="lv0-DY-NNk"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="orderDateLabel" destination="R7V-pL-ZMg" id="f7V-HT-ope"/>
+                        <outlet property="orderEmailLabel" destination="iFD-J9-MhE" id="mK4-Oa-Whq"/>
+                        <outlet property="orderIDLabel" destination="OBO-Ly-Lo6" id="Fxy-zl-sxR"/>
+                        <outlet property="orderNameLabel" destination="vP9-ZA-Ny6" id="032-Fq-NLF"/>
+                        <outlet property="orderTotalLabel" destination="jXy-kJ-qRh" id="2Wi-7H-yhy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FTF-Q3-kR5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1198" y="589"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="lv0-DY-NNk"/>
+    </inferredMetricsTieBreakers>
 </document>

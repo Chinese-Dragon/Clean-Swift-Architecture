@@ -17,7 +17,7 @@ protocol CreateOrderDisplayLogic: class
   func displayExpirationDate(_ viewModel: CreateOrder.FormatExpirationDate.ViewModel)
 }
 
-class CreateOrderViewController: UITableViewController, CreateOrderDisplayLogic
+class CreateOrderViewController: UITableViewController, CreateOrderDisplayLogic, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate
 {
   var interactor: CreateOrderBusinessLogic?
   var router: (NSObjectProtocol & CreateOrderRoutingLogic & CreateOrderDataPassing)?
@@ -72,44 +72,41 @@ class CreateOrderViewController: UITableViewController, CreateOrderDisplayLogic
     configurePickers()
   }
   
+  // MARK: Text fields
+  
+  @IBOutlet var textFields: [UITextField]!
+  
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    if let index = textFields.firstIndex(of: textField) {
+      if index < textFields.count - 1 {
+        let nextTextfield = textFields[index + 1]
+        nextTextfield.becomeFirstResponder()
+      }
+    }
+    return true
+  }
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    guard let cell = tableView.cellForRow(at: indexPath) else { return }
+    
+    for textField in textFields {
+      if textField.isDescendant(of: cell) {
+        textField.becomeFirstResponder()
+      }
+    }
+  }
+  
+  // MARK: Shipping Method
+  
+  @IBOutlet weak var shippingMethodTextfield: UITextField!
+  @IBOutlet weak var shippingMethodPicker: UIPickerView!
+  
   func configurePickers() {
     shippingMethodTextfield.inputView = shippingMethodPicker
     expirationDateTextfield.inputView = expirationDatePicker
   }
   
-  // MARK: Text fields
-  
-  @IBOutlet var textFields: [UITextField]!
-  
-  // MARK: Shipping Method Text fields
-  
-  @IBOutlet weak var shippingMethodTextfield: UITextField!
-  @IBOutlet weak var shippingMethodPicker: UIPickerView!
-  
-  // MARK: Expiration Date Text fields
-  
-  @IBOutlet weak var expirationDateTextfield: UITextField!
-  @IBOutlet weak var expirationDatePicker: UIDatePicker!
-  
-  @IBOutlet weak var billingAddressSwitch: UISwitch!
-  
-  @IBAction func expirationDatePickerValueChange(_ sender: UIDatePicker) {
-    let date = sender.date
-    let request = CreateOrder.FormatExpirationDate.Request(date: date)
-    interactor?.formatExpirationDate(request)
-  }
-  
-  @IBAction func createOrder(_ sender: UIBarButtonItem) {
-    
-  }
-  
-  // MARK: Display Logic
-  func displayExpirationDate(_ viewModel: CreateOrder.FormatExpirationDate.ViewModel) {
-    expirationDateTextfield.text = viewModel.date
-  }
-}
-
-extension CreateOrderViewController: UIPickerViewDelegate & UIPickerViewDataSource {
   func numberOfComponents(in pickerView: UIPickerView) -> Int {
     return 1
   }
@@ -125,30 +122,93 @@ extension CreateOrderViewController: UIPickerViewDelegate & UIPickerViewDataSour
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     shippingMethodTextfield.text = interactor?.shipmentMethods[row]
   }
-}
-
-extension CreateOrderViewController {
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let cell = tableView.cellForRow(at: indexPath) else { return }
-    
-    for textField in textFields {
-      if textField.isDescendant(of: cell) {
-        textField.becomeFirstResponder()
-      }
-    }
+  
+  // MARK: Expiration Date
+  
+  @IBOutlet weak var expirationDateTextfield: UITextField!
+  @IBOutlet weak var expirationDatePicker: UIDatePicker!
+  
+  @IBAction func expirationDatePickerValueChange(_ sender: UIDatePicker) {
+    let date = sender.date
+    let request = CreateOrder.FormatExpirationDate.Request(date: date)
+    interactor?.formatExpirationDate(request: request)
   }
-}
-
-extension CreateOrderViewController: UITextFieldDelegate {
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    textField.resignFirstResponder()
-    if let index = textFields.firstIndex(of: textField) {
-      if index < textFields.count - 1 {
-        let nextTextfield = textFields[index + 1]
-        nextTextfield.becomeFirstResponder()
-      }
-    }
+  
+  func displayExpirationDate(_ viewModel: CreateOrder.FormatExpirationDate.ViewModel) {
+    expirationDateTextfield.text = viewModel.date
+  }
+  
+  // MARK: Contact Info
+  
+  @IBOutlet weak var firstNameTextField: UITextField!
+  @IBOutlet weak var lastNameTextField: UITextField!
+  @IBOutlet weak var phoneTextField: UITextField!
+  @IBOutlet weak var emailTextField: UITextField!
+  
+  // MARK: Payment info
+  
+  @IBOutlet weak var billingAddressStreet1TextField: UITextField!
+  @IBOutlet weak var billingAddressStreet2TextField: UITextField!
+  @IBOutlet weak var billingAddressCityTextField: UITextField!
+  @IBOutlet weak var billingAddressZIPTextField: UITextField!
+  @IBOutlet weak var billingAddressStateTextField: UITextField!
+  
+  @IBOutlet weak var creditCardNumberTextField: UITextField!
+  @IBOutlet weak var ccvTextField: UITextField!
+  
+  // MARK: Shipping info
+  
+  @IBOutlet weak var shipmentAddressStreet1TextField: UITextField!
+  @IBOutlet weak var shipmentAddressStreet2TextField: UITextField!
+  @IBOutlet weak var shipmentAddressCityTextField: UITextField!
+  @IBOutlet weak var shipmentAddressStateTextField: UITextField!
+  @IBOutlet weak var shipmentAddressZIPTextField: UITextField!
+  
+  // MARK: Create Order
+  
+  @IBAction func createOrder(_ sender: UIBarButtonItem) {
+    // MARK: Contact info
+    let firstName = firstNameTextField.text!
+    let lastName = lastNameTextField.text!
+    let phone = phoneTextField.text!
+    let email = emailTextField.text!
     
-    return true
+    // MARK: Payment info
+    let billingAddressStreet1 = billingAddressStreet1TextField.text!
+    let billingAddressStreet2 = billingAddressStreet2TextField.text!
+    let billingAddressCity = billingAddressCityTextField.text!
+    let billingAddressState = billingAddressStateTextField.text!
+    let billingAddressZIP = billingAddressZIPTextField.text!
+    
+    let paymentMethodCreditCardNumber = creditCardNumberTextField.text!
+    let paymentMethodCVV = ccvTextField.text!
+    let paymentMethodExpirationDate = expirationDatePicker.date
+    let paymentMethodExpirationDateString = ""
+    
+    // MARK: Shipping info
+    let shipmentAddressStreet1 = shipmentAddressStreet1TextField.text!
+    let shipmentAddressStreet2 = shipmentAddressStreet2TextField.text!
+    let shipmentAddressCity = shipmentAddressCityTextField.text!
+    let shipmentAddressState = shipmentAddressStateTextField.text!
+    let shipmentAddressZIP = shipmentAddressZIPTextField.text!
+    
+    let shipmentMethodSpeed = shippingMethodPicker.selectedRow(inComponent: 0)
+    let shipmentMethodSpeedString = ""
+    
+    // MARK: Misc
+    var id: String? = nil
+    var date = Date()
+    var total = NSDecimalNumber.notANumber
+    
+    if let orderToEdit = interactor?.orderToEdit {
+      id = orderToEdit.id
+      date = orderToEdit.date
+      total = orderToEdit.total
+      let request = CreateOrder.UpdateOrder.Request(orderFormFields: CreateOrder.OrderFormFields(firstName: firstName, lastName: lastName, phone: phone, email: email, billingAddressStreet1: billingAddressStreet1, billingAddressStreet2: billingAddressStreet2, billingAddressCity: billingAddressCity, billingAddressState: billingAddressState, billingAddressZIP: billingAddressZIP, paymentMethodCreditCardNumber: paymentMethodCreditCardNumber, paymentMethodCVV: paymentMethodCVV, paymentMethodExpirationDate: paymentMethodExpirationDate, paymentMethodExpirationDateString: paymentMethodExpirationDateString, shipmentAddressStreet1: shipmentAddressStreet1, shipmentAddressStreet2: shipmentAddressStreet2, shipmentAddressCity: shipmentAddressCity, shipmentAddressState: shipmentAddressState, shipmentAddressZIP: shipmentAddressZIP, shipmentMethodSpeed: shipmentMethodSpeed, shipmentMethodSpeedString: shipmentMethodSpeedString, id: id, date: date, total: total))
+      interactor?.updateOrder(request: request)
+    } else {
+      let request = CreateOrder.CreateOrder.Request(orderFormFields: CreateOrder.OrderFormFields(firstName: firstName, lastName: lastName, phone: phone, email: email, billingAddressStreet1: billingAddressStreet1, billingAddressStreet2: billingAddressStreet2, billingAddressCity: billingAddressCity, billingAddressState: billingAddressState, billingAddressZIP: billingAddressZIP, paymentMethodCreditCardNumber: paymentMethodCreditCardNumber, paymentMethodCVV: paymentMethodCVV, paymentMethodExpirationDate: paymentMethodExpirationDate, paymentMethodExpirationDateString: paymentMethodExpirationDateString, shipmentAddressStreet1: shipmentAddressStreet1, shipmentAddressStreet2: shipmentAddressStreet2, shipmentAddressCity: shipmentAddressCity, shipmentAddressState: shipmentAddressState, shipmentAddressZIP: shipmentAddressZIP, shipmentMethodSpeed: shipmentMethodSpeed, shipmentMethodSpeedString: shipmentMethodSpeedString, id: id, date: date, total: total))
+      interactor?.createOrder(request: request)
+    }
   }
 }

@@ -39,8 +39,8 @@ class ListOrdersPresenter: ListOrdersPresentationLogic
     
     for order in response.orders {
       let date = dateFormatter.string(from: order.date)
-      let total = currencyFormatter.string(from: order.total)!
-      let displayedOrder = ListOrders.FetchOrders.ViewModel.DisplayedOrder(id: order.id!, date: date, email: order.email, name: "\(order.firstName) \(order.lastName)", total: total)
+      let total = currencyFormatter.string(from: order.total)
+      let displayedOrder = ListOrders.FetchOrders.ViewModel.DisplayedOrder(id: order.id!, date: date, email: order.email, name: "\(order.firstName) \(order.lastName)", total: total!)
       displayedOrders.append(displayedOrder)
     }
     
